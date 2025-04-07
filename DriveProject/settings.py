@@ -37,8 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'DriveProject.apps.files',
-    'DriveProject.apps.accounts',
+    'DriveProject.apps.files.apps.FilesConfig',
+    'DriveProject.apps.accounts.apps.AccountsConfig',
     'rest_framework',
     'rest_framework_simplejwt',
 ]
@@ -90,11 +90,11 @@ WSGI_APPLICATION = 'DriveProject.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': "django.db.backends.postgresql",
-        'NAME': "hamresan_db_test",
-        'USER': "devAdmin",
-        'PASSWORD': "mysecretpassword",
+        'NAME': "drive_db",
+        'USER': "postgres",
+        'PASSWORD': "1234",
         'HOST': "127.0.0.1",
-        'PORT': 5868,
+        'PORT': 5433,
     }
 }
 
@@ -103,10 +103,10 @@ STORAGES = {
     "default": {
         "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
         "OPTIONS": {
-            "bucket_name": "hamresan-bucket",
-            "endpoint_url": "http://127.0.0.1:9800/",
-            "access_key": "8wRBdjLAqqltwuXq",
-            "secret_key": "pYBMPSfg1C9ApZ32MFuBK3PNWbpeQg7b",
+            "bucket_name": "drive-bucket",
+            "endpoint_url": "http://127.0.0.1:9000/",
+            "access_key": "MlX5ezXkONmscspjzx65",
+            "secret_key": "ilRiae2Gr1mr3kzZv8F7ghKCvbJ5qGr0XUvtuq5T",
             "querystring_auth": True,
         },
     },
