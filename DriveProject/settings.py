@@ -89,9 +89,30 @@ WSGI_APPLICATION = 'DriveProject.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': "django.db.backends.postgresql",
+        'NAME': "hamresan_db_test",
+        'USER': "devAdmin",
+        'PASSWORD': "mysecretpassword",
+        'HOST': "127.0.0.1",
+        'PORT': 5868,
     }
+}
+
+
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+        "OPTIONS": {
+            "bucket_name": "hamresan-bucket",
+            "endpoint_url": "http://127.0.0.1:9800/",
+            "access_key": "8wRBdjLAqqltwuXq",
+            "secret_key": "pYBMPSfg1C9ApZ32MFuBK3PNWbpeQg7b",
+            "querystring_auth": True,
+        },
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
 }
 
 
