@@ -2,5 +2,14 @@ from django.contrib import admin
 
 from .models import Folder, File
 
-admin.site.register(Folder)
-admin.site.register(File)
+
+class FolderAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'parent', 'owner')
+
+
+class FileAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'folder', 'owner')
+
+
+admin.site.register(Folder, FolderAdmin)
+admin.site.register(File, FileAdmin)
