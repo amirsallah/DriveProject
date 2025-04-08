@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   db:
-    image: postgres:latest
+    image: postgres:13
     environment:
       POSTGRES_DB: drive_db
       POSTGRES_PASSWORD: 1234
