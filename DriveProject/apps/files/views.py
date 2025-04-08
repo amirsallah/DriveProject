@@ -20,10 +20,7 @@ class File(generics.ListCreateAPIView):
         files_serializer = FileSerializer(files_queryset, many=True)
         folders_serializer = FolderSerializer(folders_queryset, many=True)
 
-        combined_response = {
-            'files': files_serializer.data,
-            'folders': folders_serializer.data
-        }
+        combined_response = files_serializer.data + folders_serializer.data
 
         return Response(combined_response)
 

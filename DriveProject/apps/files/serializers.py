@@ -7,13 +7,24 @@ from DriveProject.apps.files.models import Folder, File
 class FileSerializer(serializers.ModelSerializer):
     class Meta:
         model = File
-        fields = ('id', 'name', 'file', 'folder', 'owner', 'shared_with')
+        fields = ('id', 'name', 'modified_at', 'size', 'type')
 
 
 class FolderSerializer(serializers.ModelSerializer):
+    type = serializers.SerializerMethodField()
+
     class Meta:
         model = Folder
-        fields = ('id', 'name', 'parent', 'owner', 'subfolders', 'files')
+        fields = ('id', 'name', 'modified_at', 'type', 'size')
+
+    def get_type(self, obj):
+        return 'folder'
+
+    # def get_size(self, obj):
+    #     size_in_mb = obj.get_size() / (1024 * 1024)
+    #     if size_in_mb < 1:
+    #         return f"{obj.get_size()} bytes"
+    #     return f"{size_in_mb:.2f} MB"
 
 
 class FileShareSerializer(serializers.Serializer):
