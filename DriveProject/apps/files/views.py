@@ -1,10 +1,11 @@
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 
-from DriveProject.apps.files.serializers import FileSerializer, FolderSerializer
+from DriveProject.apps.files.serializers import FileSerializer, FolderSerializer, CreateFileSerializer, \
+    DownloadFileSerializer
 
 
-class File(generics.ListCreateAPIView):
+class File(generics.ListAPIView):
     serializer_class = FileSerializer
     permission_classes = [permissions.IsAuthenticated]
 
@@ -23,6 +24,16 @@ class File(generics.ListCreateAPIView):
         combined_response = files_serializer.data + folders_serializer.data
 
         return Response(combined_response)
+
+
+class FileCreate(generics.CreateAPIView):
+    serializer_class = CreateFileSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
 
 
 class FileDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -64,7 +75,7 @@ class FileUnshare(generics.UpdateAPIView):
 
 
 class FileDownload(generics.RetrieveAPIView):
-    serializer_class = FileSerializer
+    serializer_class = DownloadFileSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
