@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-
+from datetime import timedelta
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -84,6 +84,14 @@ TEMPLATES = [
     },
 ]
 
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=24),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': False,
+}
+
 WSGI_APPLICATION = 'DriveProject.wsgi.application'
 
 
@@ -106,10 +114,10 @@ STORAGES = {
     "default": {
         "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
         "OPTIONS": {
-            "bucket_name": "drive-bucket",
+            "bucket_name": "drive",
             "endpoint_url": "http://127.0.0.1:9000/",
-            "access_key": "MlX5ezXkONmscspjzx65",
-            "secret_key": "ilRiae2Gr1mr3kzZv8F7ghKCvbJ5qGr0XUvtuq5T",
+            "access_key": "no7oyF0ZQeTb2hMovtz0",
+            "secret_key": "uh5QRNPasWwgnPYpwgDtuJnWPK4zuYzI7fvW5bIV",
             "querystring_auth": True,
         },
     },
