@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
+from rest_framework.fields import SerializerMethodField
 
 from DriveProject.apps.files.models import Folder, File
 
@@ -8,6 +9,24 @@ class FileSerializer(serializers.ModelSerializer):
     class Meta:
         model = File
         fields = ('id', 'name', 'modified_at', 'size', 'type')
+
+
+class DownloadFileSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = File
+        fields = ['file_url']
+
+
+class CreateFileSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = File
+        fields = ['file']
+
+    def create(self, validated_data):
+        validated_data['owner'] = self.context['request'].user
+        return super().create(validated_data)
 
 
 class FolderSerializer(serializers.ModelSerializer):
