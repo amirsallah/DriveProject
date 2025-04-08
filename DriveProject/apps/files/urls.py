@@ -3,11 +3,11 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('upload/', views.File.as_view(), name='upload_file'),
+    path('upload/', views.FileCreate.as_view(), name='upload_file'),
     path('list/<int:pk>/', views.File.as_view(), name='list_files'),
     path('list/', views.File.as_view(), name='list'),
     path('detail/<int:pk>/', views.FileDetail.as_view(), name='detail_file'),
-    path('download/', views.FileDownload.as_view(), name='download_file'),
+    path('download/<int:pk>/', views.FileDownload.as_view(), name='download_file'),
     path('delete/<int:pk>/', views.FileDetail.as_view(), name='delete_file'),
     path('share/<int:pk>/', views.FileShare.as_view(), name='share_file'),
     path('unshare/<int:pk>/', views.FileUnshare.as_view(), name='unshare_file'),
