@@ -12,14 +12,12 @@ class FileSerializer(serializers.ModelSerializer):
 
 
 class DownloadFileSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = File
         fields = ['file_url']
 
 
 class CreateFileSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = File
         fields = ['file']
@@ -39,11 +37,16 @@ class FolderSerializer(serializers.ModelSerializer):
     def get_type(self, obj):
         return 'folder'
 
-    # def get_size(self, obj):
-    #     size_in_mb = obj.get_size() / (1024 * 1024)
-    #     if size_in_mb < 1:
-    #         return f"{obj.get_size()} bytes"
-    #     return f"{size_in_mb:.2f} MB"
+
+class CreateFolderSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Folder
+        fields = ('name', 'parent')
+
+    def create(self, validated_data):
+        validated_data['owner'] = self.context['request'].user
+        return super().create(validated_data)
 
 
 class FileShareSerializer(serializers.Serializer):

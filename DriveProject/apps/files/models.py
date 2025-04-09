@@ -16,8 +16,9 @@ class Folder(CreationModificationDateAbstractModel):
     size = models.BigIntegerField(null=True, blank=True)
 
     def get_size(self):
+        if not self.pk:
+            return 0
         size = 0
-        print(self.files.all())
         for file in self.files.all():
             if file.size:
                 size += file.size
@@ -62,7 +63,6 @@ class File(CreationModificationDateAbstractModel):
     def save(self, *args, **kwargs):
         if self.file:
             self.size = self.file.size
-            # self.name = self.file.name
             if self.file:
                 new_filename = self.sanitize_filename(self.file.name)
                 self.file.name = new_filename
