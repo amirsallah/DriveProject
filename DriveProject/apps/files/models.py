@@ -1,4 +1,3 @@
-import mimetypes
 import os
 import re
 
@@ -48,7 +47,7 @@ class File(CreationModificationDateAbstractModel):
 
     def fix_s3_url(self, url):
         end_point_minio = "127.0.0.1:9000"
-        website_url = "192.168.123.105:9000"
+        website_url = "192.168.3.113:9000"
         url = str(url).split("?")[0]
         url = url.replace(end_point_minio, f"{website_url}")
         return url
@@ -63,6 +62,7 @@ class File(CreationModificationDateAbstractModel):
     def save(self, *args, **kwargs):
         if self.file:
             self.size = self.file.size
+            self.file_url = self.fix_s3_url(self.file.url)
             if self.file:
                 new_filename = self.sanitize_filename(self.file.name)
                 self.file.name = new_filename
@@ -74,6 +74,15 @@ class File(CreationModificationDateAbstractModel):
             user = User.objects.get(id=user_id)
             if user not in self.shared_with.all():
                 self.shared_with.add(user)
+                self.save()
+        except User.DoesNotExist:
+            raise ValueError("User does not exist")
+
+    def remove_user_to_share_list(self, user_id: int) -> None:
+        try:
+            user = User.objects.get(id=user_id)
+            if user in self.shared_with.all():
+                self.shared_with.remove(user)
                 self.save()
         except User.DoesNotExist:
             raise ValueError("User does not exist")

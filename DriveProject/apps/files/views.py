@@ -44,36 +44,6 @@ class FileDetail(generics.RetrieveUpdateDestroyAPIView):
         return self.request.user.files.all()
 
 
-class FileShare(generics.UpdateAPIView):
-    serializer_class = FileSerializer
-    permission_classes = [permissions.IsAuthenticated]
-    lookup_field = 'id'
-
-    def get_queryset(self):
-        return self.request.user.files.all()
-
-    def update(self, request, *args, **kwargs):
-        file = self.get_object()
-        user_id = request.data.get('user_id')
-        if not user_id:
-            return Response({'error': 'User ID is required'}, status=400)
-
-        # Assuming you have a method to add a user to the file's share list
-        file.add_user_to_share_list(user_id)
-        file.save()
-
-        serializer = self.get_serializer(file)
-        return Response(serializer.data)
-
-
-class FileUnshare(generics.UpdateAPIView):
-    serializer_class = FileSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get_queryset(self):
-        return self.request.user.files.all()
-
-
 class FileDownload(generics.RetrieveAPIView):
     serializer_class = DownloadFileSerializer
     permission_classes = [permissions.IsAuthenticated]

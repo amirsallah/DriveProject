@@ -11,6 +11,29 @@ class FileSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'modified_at', 'size', 'type')
 
 
+class EditFileSerializer(serializers.ModelSerializer):
+    unshared_with_ids = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), many=True)
+
+    class Meta:
+        model = File
+        fields = ('name', 'folder', 'shared_with', 'unshared_with_ids')
+
+    def update(self, instance, validated_data):
+        shared_with_ids = validated_data.get('shared_with', [])
+        unshared_with_ids = validated_data.get('unshared_with_ids', [])
+
+        instance = super().update(instance, validated_data)
+
+        if shared_with_ids:
+            for user_id in shared_with_ids:
+                instance.add_user_to_share_list(user_id)
+        if unshared_with_ids:
+            for user_id in unshared_with_ids:
+                instance.remove_user_to_share_list(user_id)
+
+        return instance
+
+
 class DownloadFileSerializer(serializers.ModelSerializer):
     class Meta:
         model = File
@@ -20,7 +43,7 @@ class DownloadFileSerializer(serializers.ModelSerializer):
 class CreateFileSerializer(serializers.ModelSerializer):
     class Meta:
         model = File
-        fields = ['file']
+        fields = ['file', 'folder']
 
     def create(self, validated_data):
         validated_data['owner'] = self.context['request'].user
@@ -29,17 +52,22 @@ class CreateFileSerializer(serializers.ModelSerializer):
 
 class FolderSerializer(serializers.ModelSerializer):
     type = serializers.SerializerMethodField()
+    parent = serializers.SerializerMethodField()
 
     class Meta:
         model = Folder
-        fields = ('id', 'name', 'modified_at', 'type', 'size')
+        fields = ('id', 'name', 'modified_at', 'type', 'size', 'parent')
 
     def get_type(self, obj):
         return 'folder'
 
+    def get_parent(self, obj):
+        if obj.parent:
+            return obj.parent.name
+        return None
+
 
 class CreateFolderSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Folder
         fields = ('name', 'parent')
